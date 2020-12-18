@@ -1,15 +1,15 @@
 const router = require('express').Router();
-const bcrypjs = require('bcryptjs')
+const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { jwtSecret } = require('../../config/secrets')
 const Users = require('../jokes/jokes-model')
 
 router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+  // res.end('implement register, please!');
   
   const credentials = req.body
   const rounds = process.env.BCRYPT_ROUND || 8
-  const hash = bcryptjs.hashSync(credentials.passwords, rounds)
+  const hash = bcryptjs.hashSync(credentials.password, rounds)
 
   credentials.password = hash;
 
@@ -53,7 +53,7 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+  // res.end('implement login, please!');
   const { username, password } = req.body
 
   Users.findBy({ username: username })
@@ -103,6 +103,7 @@ const makeToken = (user) => {
   const options = {
     expiresIn: '900s'
   }
+  return jwt.sign(payload, jwtSecret, options)
 }
 
 module.exports = router;
