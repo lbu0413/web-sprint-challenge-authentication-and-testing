@@ -4,7 +4,22 @@ const jwt = require('jsonwebtoken')
 const { jwtSecret } = require('../../config/secrets')
 const Users = require('../jokes/jokes-model')
 
-router.post('/register', (req, res) => {
+const checkIfUnique = async (req, res, next) => {
+  try {
+      const rows = await User.findBy({ username: req.body.username })
+      if(!rows.length){
+          next()
+      }
+      else{
+          res.status(401).json('username taken')
+      }
+  }
+  catch(err){
+      res.status(500).json('something not good happened')
+  }
+}
+
+router.post('/register', checkIfUnique, (req, res) => {
   // res.end('implement register, please!');
   
   const credentials = req.body
@@ -15,11 +30,11 @@ router.post('/register', (req, res) => {
 
   Users.add(credentials)
     .then(user => {
-      if(!user.username || !user.password){
+      if(!credentials.username || !credentials.password){
         res.status(400).json({ message: 'username and password required'})
       }
       else{
-        res.status(201).json({ data: user })
+        res.status(201).json({ user })
       }
     })
     .catch(err => {
