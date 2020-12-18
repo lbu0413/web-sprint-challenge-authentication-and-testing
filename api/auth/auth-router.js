@@ -38,11 +38,11 @@ router.post('/register', checkIfUnique, async (req, res) => {
 
   Users.add(credentials)
     .then(user => {
-      if(!credentials.username || !credentials.password){
+      if(!req.body.username || !req.body.password){
         res.status(400).json({ message: 'username and password required'})
       }
       else{
-        res.status(201).json({ user })
+        res.status(201).json(credentials)
       }
     })
     .catch(err => {
@@ -75,7 +75,16 @@ router.post('/register', checkIfUnique, async (req, res) => {
   */
 });
 
-router.post('/login', (req, res) => {
+const checkCredentialsExist = (req, res, next) => {
+  if(!req.body.username || !req.body.password){
+    res.status(401).json('username and password required')
+  }
+  else{
+    next()
+  }
+}
+
+router.post('/login', checkCredentialsExist, (req, res) => {
   // res.end('implement login, please!');
   const { username, password } = req.body
 
