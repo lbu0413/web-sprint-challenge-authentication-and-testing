@@ -42,7 +42,7 @@ router.post('/register', checkIfUnique, async (req, res) => {
         res.status(400).json({ message: 'username and password required'})
       }
       else{
-        res.status(201).json(credentials)
+        res.status(201).json(user)
       }
     })
     .catch(err => {
