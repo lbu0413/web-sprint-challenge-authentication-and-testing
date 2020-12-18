@@ -6,7 +6,7 @@ const Users = require('../jokes/jokes-model')
 
 const checkIfUnique = async (req, res, next) => {
   try {
-      const rows = await User.findBy({ username: req.body.username })
+      const rows = await Users.findBy({ username: req.body.username })
       if(!rows.length){
           next()
       }
@@ -19,8 +19,16 @@ const checkIfUnique = async (req, res, next) => {
   }
 }
 
-router.post('/register', checkIfUnique, (req, res) => {
+router.post('/register', checkIfUnique, async (req, res) => {
   // res.end('implement register, please!');
+  // try{
+  //   const hash = bcryptjs.hashSync(req.body.password, 10)
+  //   const newUser = await Users.add({ username: req.body.username, password: hash })
+  //   res.status(201).json(newUser)
+  // }
+  // catch(err){
+  //   res.status(500).json({ message: err.message })
+  // }
   
   const credentials = req.body
   const rounds = process.env.BCRYPT_ROUND || 8
